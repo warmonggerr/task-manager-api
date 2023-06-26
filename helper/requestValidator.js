@@ -2,13 +2,17 @@ const taskData = require("../tasks.json");
 
 class validator {
     static validateTaskDetails(taskInfo, taskData) {
+        let isTaskUnique = this.validateUniqueTaskId(taskInfo, taskData);
+        let isInputsNonEmpty = this.validateNonEmptyInputs(taskInfo);
+        let isActiveType = this.validateIsActiveType(taskInfo);
+        console.log("isTaskUnique :: ", isTaskUnique);
+        console.log("isInputsNonEmpty :: ", isInputsNonEmpty);
+        console.log("isActiveType :: ", isActiveType);
         if (taskInfo.hasOwnProperty("id") &&
             taskInfo.hasOwnProperty("title") &&
             taskInfo.hasOwnProperty("description") &&
             taskInfo.hasOwnProperty("isActive") &&
-            !this.validateUniqueTaskId(taskInfo, taskData) &&
-            this.validateNonEmptyInputs(taskInfo) &&
-            this.validateIsActiveType(taskInfo)) {
+            isTaskUnique && isInputsNonEmpty && isActiveType){
             return {
                 "status": true,
                 "message": "task can be added"
@@ -52,13 +56,7 @@ class validator {
 
     static validateUniqueTaskId(taskInfo, taskData) {
         let valueFound = taskData.tasks.find(data => data.id === taskInfo.id);
-        console.log("res validateUniqueTaskId :: ", !!valueFound)
-        return !!valueFound;
-    }
-    static validateTaskExists(taskId, taskData) {
-        let valueFound = taskData.tasks.find(data => data.id === taskId);
-        console.log("res validateTaskIdExists :: ", !!valueFound)
-        return !!valueFound;
+        return (valueFound === undefined)
     }
 }
 
